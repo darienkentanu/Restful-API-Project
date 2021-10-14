@@ -1,0 +1,1044 @@
+openapi: 3.0.2
+info:
+  title: ALTA Store
+  version: 1.0.0
+servers:
+  - url: http://api.example.com/v1
+paths:
+  /adminregister:
+    post:
+      tags:
+        - Administrators
+      summary: Register an administrator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseCreateAdministrator"
+        '400':
+          $ref: "#/components/responses/ServerError"
+          
+  /adminlogin:
+    post:
+      tags:
+        - Administrators
+      summary: Login as administrator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginAdministrator"
+        '400':
+          $ref: "#/components/responses/ServerError"
+
+  /administrators:
+    get:
+      tags:
+        - Administrators
+      summary: Get all administrator
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetAllAdministrator"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /administrators/{id}:
+    get:
+      tags:
+        - Administrators
+      summary: Get administrator by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific administrator
+          schema:
+            type: number
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginAdministrator"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+        - Administrators
+      summary: Edit administrator by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific administrator
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginAdministrator"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      tags:
+        - Administrators
+      summary: Delete administrator by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific administrator
+          schema:
+            type: number
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginAdministrator"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+  
+  /register:
+    post:
+      tags:
+        - Customers
+      summary: Register a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                phone_number:
+                  type: number
+                gender:
+                  type: string
+                  enum: [male, female]
+                address:
+                  type: string
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseCreateCustomer"
+        '400':
+          $ref: "#/components/responses/ServerError"
+          
+  /login:
+    post:
+      tags:
+        - Customers
+      summary: Login as customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginCustomer"
+        '400':
+          $ref: "#/components/responses/ServerError"
+  /customers:
+    get:
+      tags:
+        - Customers
+      summary: Get all customers
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetAllCustomers"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+  
+  /customers/{id}:
+    get:
+      tags:
+        - Customers
+      summary: Get customer by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific customer
+          schema:
+            type: number
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginCustomer"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+        - Customers
+      summary: Edit customer by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific customer
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                phone_number:
+                  type: number
+                gender:
+                  type: string
+                  enum: [male, female]
+                address:
+                  type: string
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginCustomer"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      tags:
+        - Customers
+      summary: Delete customer by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific customer
+          schema:
+            type: number
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginCustomer"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+          
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Get all categories
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetAllCategories"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      tags:
+        - Categories
+      summary: Add categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetCategory"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+                  
+  /categories/{id}:
+    put:
+      tags:
+        - Categories
+      summary: Edit category by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific category
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetCategory"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      tags:
+        - Categories
+      summary: Delete category by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for delete specific category
+          schema:
+            type: number
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetCategory"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+          
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetAllProducts"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      tags:
+        - Products
+      summary: Add products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                quantity:
+                  type: number
+                price:
+                  type: number
+                category_id:
+                  $ref: "#/components/schemas/Category/properties/id"
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetProduct"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+                  
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific product
+          schema:
+            type: number 
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetProduct"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+        - Products
+      summary: Edit product by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific product
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                quantity:
+                  type: number
+                price:
+                  type: number
+                category_id:
+                  $ref: "#/components/schemas/Category/properties/id" 
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetProduct"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      tags:
+        - Products
+      summary: Delete product by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific product
+          schema:
+            type: number 
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetProduct"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+                  
+  /carts/{id}:
+    get:
+      tags:
+        - Carts
+      summary: Get cart by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific cart
+          schema:
+            type: number
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetCart"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+  /cartitems/{id}:
+    post:
+      tags:
+        - Cart Items
+      summary: Add cart item by cart id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific cart
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  $ref: "#/components/schemas/Cart/properties/id"
+                product_id:
+                  $ref: "#/components/schemas/Product/properties/id"
+                quantity:
+                  type: number
+                checkout_id:
+                  type: nullable
+                  $ref: "#/components/schemas/Checkout/properties/id"
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetCartItem"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      tags:
+        - Cart Items
+      summary: Edit cart item by cart item id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific cart item
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_id:
+                  $ref: "#/components/schemas/Cart/properties/id"
+                product_id:
+                  $ref: "#/components/schemas/Product/properties/id"
+                quantity:
+                  type: number
+                checkout_id:
+                  type: nullable
+                  $ref: "#/components/schemas/Checkout/properties/id"
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetCartItem"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      tags:
+        - Cart Items
+      summary: Delete cart item by cart item id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific cart item
+          schema:
+            type: number
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetCartItem"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Get all transactions
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetAllTransactions"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      tags:
+        - Transactions
+      summary: Add transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer_id:
+                  $ref: "#/components/schemas/Customer/properties/id"
+                address:
+                  type: string
+                courier:
+                  type: string
+                checkout_id:
+                  $ref: "#/components/schemas/Checkout/properties/id"
+                payment_status:
+                  type: number
+                payment_detail_id:
+                  type: nullable
+                  $ref: "#/components/schemas/PaymentDetail/properties/id"
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetTransaction"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+                  
+  /transactions/{id}:
+    get:
+      tags:
+        - Transactions
+      summary: Get transaction by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific transaction
+          schema:
+            type: number
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetTransaction"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /paymentdetails:
+    get:
+      tags:
+        - Payment Details
+      summary: Get all payment details
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetAllPaymentDetails"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      tags:
+        - Payment Details
+      summary: Add payment details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                payment_method:
+                  type: string
+                amount:
+                  type: number
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetPaymentDetail"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+                  
+  /paymentdetails/{id}:
+    get:
+      tags:
+        - Payment Details
+      summary: Get payment detail by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific payment detail
+          schema:
+            type: number
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetPaymentDetail"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+          
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Administrator:
+      type: object
+      properties:
+        id:
+          type: number
+        fullname:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        token:
+          type: string
+    Customer:
+      type: object
+      properties:
+        id:
+          type: number
+        fullname:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        gender:
+          type: string
+          enum: [male, female]
+        phone_number:
+          type: number
+        password:
+          type: string
+          format: password
+        token:
+          type: string
+        cart_id:
+          $ref: "#/components/schemas/Cart/properties/id"
+    Category:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: number
+        price:
+          type: number
+        category_id:
+          $ref: "#/components/schemas/Category/properties/id"
+    Cart:
+      type: object
+      properties:
+        id:
+          type: number
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: number
+        cart_id:
+          $ref: "#/components/schemas/Cart/properties/id"
+        product_id:
+          $ref: "#/components/schemas/Product/properties/id"
+        quantity:
+          type: number
+        checkout_id:
+          type: nullable
+          $ref: "#/components/schemas/Checkout/properties/id"
+    Checkout:
+      type: object
+      properties:
+        id:
+          type: number
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: number
+        customer_id:
+          $ref: "#/components/schemas/Customer/properties/id"
+        address:
+          type: string
+        courier:
+          type: string
+        checkout_id:
+          $ref: "#/components/schemas/Checkout/properties/id"
+        payment_status:
+          type: number
+        payment_detail_id:
+          type: nullable
+          $ref: "#/components/schemas/PaymentDetail/properties/id"
+    PaymentDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        payment_method:
+          type: string
+        amount:
+          type: number
+
+  responses:
+    StatusOK:
+      description: OK 
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    ServerError:
+      description: Internal server error
+    ResponseCreateAdministrator:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Administrator"  
+          example:
+            id: 1
+            fullname: Admin
+            username: admin1
+            email: admin@gmail.com
+            password: admin123
+            token: ""
+    ResponseLoginAdministrator:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Administrator"  
+          example:
+            id: 1
+            fullname: Admin
+            username: admin1
+            email: admin@gmail.com
+            password: admin123
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzM5Njc3NTEsInVzZXJJZCI6MX0.Z0km5nKtnGzdaR5C2fvUag949dvnjCIDWXlY1RTZjOQ"
+    ResponseGetAllAdministrator:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Administrator"  
+          example:
+            - id: 1
+              fullname: Admin
+              username: admin1
+              email: admin@gmail.com
+              password: admin123
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzM5Njc3NTEsInVzZXJJZCI6MX0.Z0km5nKtnGzdaR5C2fvUag949dvnjCIDWXlY1RTZjOQ"
+            - id: 2
+              fullname: Admin 2
+              username: admin2
+              email: admin2@gmail.com
+              password: admin123
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzM5Njc3NTEsInVzZXJJZCI6MX0.Z0km5nKtnGzdaR5C2fvUag949dvnjCIDWXlY1RTZjOQ"
+    ResponseCreateCustomer:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Customer"  
+          example:
+            id: 1
+            fullname: Customer
+            username: customer1
+            email: customer@gmail.com
+            password: customer123
+            phone_number: 08123456789
+            gender: male
+            address: earth
+            token: ""
+    ResponseLoginCustomer:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Customer"  
+          example:
+            id: 1
+            fullname: Customer
+            username: customer1
+            email: customer@gmail.com
+            password: customer123
+            phone_number: 08123456789
+            gender: male
+            address: earth
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+    ResponseGetAllCustomers:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Customer"  
+          example:
+            - id: 1
+              fullname: Customer
+              username: customer1
+              email: customer@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: male
+              address: earth
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+            - id: 2
+              fullname: Customer 2
+              username: customer2
+              email: customer2@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: female
+              address: earth
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+    ResponseGetAllCategories:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Category"  
+          example:
+            - id: 1
+              name: Category 1
+              description: Desc 1
+            - id: 2
+              name: Category 2
+              description: Desc 2
+    ResponseGetCategory:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Category"  
+          example:
+            id: 1
+            name: Category 1
+            description: Desc 1
+    ResponseGetAllProducts:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"  
+          example:
+            - id: 1
+              name: Product 1
+              description: Desc 1
+              quantity: 20
+              price: 25000
+              category_id: 1
+            - id: 2
+              name: Product 2
+              description: Desc 2
+              quantity: 25
+              price: 10000
+              category_id: 1
+    ResponseGetProduct:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"  
+          example:
+            id: 1
+            name: Product 1
+            description: Desc 1
+            quantity: 20
+            price: 25000
+            category_id: 1
+    ResponseGetCart:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/CartItem"  
+          example:
+            - id: 1
+              cart_id: 1
+              product_id: 1
+              quantity: 3
+              checkout_id: 0
+            - id: 2
+              cart_id: 1
+              product_id: 2
+              quantity: 1
+              checkout_id: 0
+    ResponseGetCartItem:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/CartItem"  
+          example:
+            id: 1
+            cart_id: 1
+            product_id: 1
+            quantity: 3
+            checkout_id: 0
+    ResponseGetAllTransactions:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Transaction"  
+          example:
+            - id: 1
+              customer_id: 1
+              address: earth
+              courier: jne
+              checkout_id: 1
+              payment_status: 1
+              payment_detail_id: 1
+            - id: 2
+              customer_id: 1
+              address: venus
+              courier: jnt
+              checkout_id: 2
+              payment_status: 0
+              payment_detail_id: 0
+    ResponseGetTransaction:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Transaction"  
+          example:
+            id: 1
+            customer_id: 1
+            address: earth
+            courier: jne
+            checkout_id: 1
+            payment_status: 1
+            payment_detail_id: 1
+    ResponseGetAllPaymentDetails:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/PaymentDetail"  
+          example:
+            - id: 1
+              payment_method: bca
+              amount: 20000
+            - id: 2
+              payment_method: bni
+              amount: 250000
+    ResponseGetPaymentDetail:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/PaymentDetail"  
+          example:
+            id: 1
+            payment_method: bca
+            amount: 20000
