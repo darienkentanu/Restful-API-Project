@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 func getTransactionStatus(orderID int) (status int, err error) {
 
-	url := "https://api.sandbox.midtrans.com/v2/ORDER-101-1234567/status"
+	orderIDString := strconv.Itoa(orderID)
+	url := "https://api.sandbox.midtrans.com/v2/" + orderIDString + "/status"
+	url = strings.TrimSpace(url)
 	method := "GET"
 
 	client := &http.Client{}
