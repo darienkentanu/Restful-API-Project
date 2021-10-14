@@ -41,6 +41,7 @@ func initMigration(db *gorm.DB) {
 	db.AutoMigrate(&models.Product{})
 	db.AutoMigrate(&models.Cart{})
 	db.AutoMigrate(&models.CartItem{})
-	db.AutoMigrate(&models.CheckoutItem{})
+	db.AutoMigrate(&models.Checkout{})
 	db.AutoMigrate(&models.Transaction{})
+	db.AutoMigrate(&models.PaymentDetail{})
 }
