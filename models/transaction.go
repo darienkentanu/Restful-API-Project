@@ -9,8 +9,8 @@ type Checkout struct {
 
 type Transaction struct {
 	ID              int            `gorm:"primarykey;AUTO_INCREMENT" json:"id" form:"id"`
-	CustomerID		int			   `json:"customer_id" form:"customer_id"`
-	Customer	    Customer       `gorm:"foreignkey:CustomerID"`
+	UserID			int			   `json:"user_id" form:"user_id"`
+	User		    User       	   `gorm:"foreignkey:UserID"`
 	Address         string 		   `gorm:"type:longtext;" json:"address" form:"address"`
 	Courier			string 		   `gorm:"type:varchar(30);not null" json:"courier" form:"courier"`
 	PaymentStatus	int			   `gorm:"type:tinyint;not null;default:0;" json:"payment_status" form:"payment_status"`

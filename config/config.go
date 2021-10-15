@@ -36,7 +36,7 @@ func InitDB() *gorm.DB {
 }
 
 func initMigration(db *gorm.DB) {
-	db.AutoMigrate(&models.Customer{})
+	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Category{})
 	db.AutoMigrate(&models.Product{})
 	db.AutoMigrate(&models.Cart{})
