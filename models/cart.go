@@ -13,7 +13,7 @@ type CartItem struct {
 	Cart     	Cart	 `gorm:"foreignkey:CartID"`
 	ProductID	int		 `json:"product_id" form:"product_id"`
 	Product     Product	 `gorm:"foreignkey:ProductID"`
-	Quantity    int      `gorm:"type:bigint;not null" json:"quantity" form:"quantity"`
+	Quantity    int      `gorm:"type:int;not null" json:"quantity" form:"quantity"`
 	AddedAt    	time.Time
 	CheckoutID	int		 `json:"checkout_id" form:"checkout_id"`
 	Checkout	Checkout `gorm:"foreignkey:CheckoutID"`
