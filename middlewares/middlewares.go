@@ -1,26 +1,61 @@
 package middlewares
 
 import (
+	"altastore/constants"
+	"fmt"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt"
+	"github.com/labstack/echo/v4"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
-func CreateToken(personId int, jwtSecret string) (string, error) {
-	claims := jwt.MapClaims{}
+var IsLoggedIn = echoMiddleware.JWTWithConfig(echoMiddleware.JWTConfig{
+    SigningKey: []byte(constants.JWT_SECRET),
+})
+
+func CreateToken(userId int, role string) (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+
 	claims["authorized"] = true
-	claims["personId"] = personId
+	claims["userId"] = userId
+	claims["role"] = role
 	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() // Token expires after 1 hour
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(jwtSecret))
+	
+	tokenString, err := token.SignedString([]byte(constants.JWT_SECRET))
+	if err != nil {
+		fmt.Errorf("Something Went Wrong: %s", err.Error())
+		return "", err
+	}
+	return tokenString, nil
 }
 
-// func ExtractTokenUserId(e echo.Context) int {
-// 	token := e.Get("user").(*jwt.Token)
-// 	if token.Valid {
-// 		claims := token.Claims.(jwt.MapClaims)
-// 		personId := claims["personId"].(int)
-// 		return personId
-// 	}
-// 	return -1 // invalid user
-// }
+func IsAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+    return func(e echo.Context) error {
+        token := e.Get("user").(*jwt.Token)
+        if token.Valid {
+			claims := token.Claims.(jwt.MapClaims)
+			role := claims["role"].(string)
+			if role != "admin" {
+            	return echo.ErrUnauthorized
+			}
+		}
+        return next(e)
+    }
+}
+
+func CurrentLoginUser(c echo.Context) int {
+	token := c.Get("user").(*jwt.Token)
+	if token != nil && token.Valid {
+		claims := token.Claims.(jwt.MapClaims)
+		userId := claims["userId"]
+		switch userId.(type) {
+		case float64:
+			return int(userId.(float64))
+		default:
+			return userId.(int)
+		}
+	}
+	return -1 // invalid user
+}
