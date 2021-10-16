@@ -32,7 +32,7 @@ func LoginUsersController(c echo.Context) error {
 	newToken, err = middlewares.CreateToken(int(user.ID), user.Role)
 	if err != nil {
 		fmt.Println("gagal bikin token")
-		return c.String(http.StatusBadRequest, "Cannot login")
+		return echo.NewHTTPError(http.StatusBadRequest, "Cannot login")
 	}
 
 	user.Token = newToken
@@ -61,7 +61,7 @@ func CreateUsersController(c echo.Context) error {
 	var user models.User
 
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, "Invalid input")
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
 	var err error
@@ -72,14 +72,14 @@ func CreateUsersController(c echo.Context) error {
 
 	user, err = database.CreateUser(user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, "Cannot create user")
 	}
 
 	var cart models.Cart
 	cart.UserID = user.ID
 	err = database.CreateCart(cart)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, "Cannot create cart")
 	}
 
 	return c.JSON(http.StatusOK, M{
@@ -106,15 +106,20 @@ func UpdateUserController(c echo.Context) error {
 
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id < 1 {
-		return c.String(http.StatusBadRequest, "Invalid ID")
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid ID")
 	}
 
 	if id != middlewares.CurrentLoginUser(c) {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Unauthorized")
+		return echo.NewHTTPError(http.StatusForbidden, "Forbidden")
 	}
 
 	if err := c.Bind(&newUser); err != nil {
-		return c.JSON(http.StatusBadRequest, "Invalid input")
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
+	}
+
+	newUser.Password, err = GeneratehashPassword(newUser.Password)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "error in password hash")
 	}
 
 	user, err := database.UpdateUser(id, newUser)

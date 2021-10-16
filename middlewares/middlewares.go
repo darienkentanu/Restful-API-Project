@@ -45,8 +45,8 @@ func IsAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func CurrentLoginUser(c echo.Context) int {
-	token := c.Get("user").(*jwt.Token)
+func CurrentLoginUser(e echo.Context) int {
+	token := e.Get("user").(*jwt.Token)
 	if token != nil && token.Valid {
 		claims := token.Claims.(jwt.MapClaims)
 		userId := claims["userId"]
