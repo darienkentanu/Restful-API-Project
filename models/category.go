@@ -8,3 +8,8 @@ type Category struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type Category_response struct {
+	ID   int
+	Name string
+}
