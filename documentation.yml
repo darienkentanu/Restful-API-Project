@@ -35,7 +35,7 @@ paths:
                 address:
                   type: string
       responses:
-        '200':
+        '201':
           $ref: "#/components/responses/ResponseCreateCustomer"
         '400':
           $ref: "#/components/responses/ServerError"   
@@ -62,7 +62,7 @@ paths:
           $ref: "#/components/responses/ResponseLoginUser"
         '400':
           $ref: "#/components/responses/ServerError"
-
+  
   /users:
     get:
       security:
@@ -91,7 +91,7 @@ paths:
             type: number
       responses:
         '200':
-          $ref: "#/components/responses/ResponseCreateCustomer"
+          $ref: "#/components/responses/ResponseEditCustomer"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
           
@@ -123,7 +123,7 @@ paths:
                 name:
                   type: string
       responses:
-        '200':
+        '201':
           $ref: "#/components/responses/ResponseCreateCategory"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
@@ -184,7 +184,7 @@ paths:
                 category_id:
                   $ref: "#/components/schemas/Category/properties/id"
       responses:
-        '200':
+        '201':
           $ref: "#/components/responses/ResponseCreateProduct"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
@@ -240,7 +240,7 @@ paths:
                   $ref: "#/components/schemas/Category/properties/id" 
       responses:
         '200':
-          $ref: "#/components/responses/ResponseCreateProduct"
+          $ref: "#/components/responses/ResponseEditProduct"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
     delete:
@@ -306,7 +306,7 @@ paths:
                 quantity:
                   type: number
       responses:
-        '200': 
+        '201': 
           $ref: "#/components/responses/ResponseCreateCartItem"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
@@ -342,7 +342,7 @@ paths:
                   type: number
       responses:
         '200': 
-          $ref: "#/components/responses/ResponseCreateCartItem"
+          $ref: "#/components/responses/ResponseEditCartItem"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
     delete:
@@ -388,23 +388,12 @@ paths:
                       product_id: 
                         $ref: "#/components/schemas/Product/properties/id"
       responses:
-        '200': 
+        '201': 
           $ref: "#/components/responses/ResponseCreateCheckout"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
 
   /transactions:
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - Transactions
-      summary: Get all transactions
-      responses:
-        '200': 
-          $ref: "#/components/responses/ResponseGetAllTransactions"
-        '400':
-          $ref: "#/components/responses/UnauthorizedError"
     post:
       security:
         - bearerAuth: []
@@ -429,8 +418,40 @@ paths:
                 payment_status:
                   type: number
       responses:
-        '200': 
+        '201': 
           $ref: "#/components/responses/ResponseCreateTransaction"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transactions
+      summary: Get all transactions
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetAllTransactions"
+        '400':
+          $ref: "#/components/responses/UnauthorizedError"
+  
+  /transactions?range={range}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transactions
+      summary: Get daily, weekly or monthly transactions
+      parameters:
+        - name: range
+          in: path
+          required: true
+          description: range for get daily, weekly or monthly transactions
+          schema:
+            type: string
+            enum: [daily, weekly, monthly]
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetAllTransactions"
         '400':
           $ref: "#/components/responses/UnauthorizedError"
                   
@@ -590,8 +611,13 @@ components:
           type: string
         courier:
           type: string
-        checkout_id:
-          type: number
+        products:
+          type: array
+          items:
+            type: "object"
+            properties:
+              product_id: 
+                $ref: "#/components/schemas/Product/properties/id"
         payment_status:
           type: number
     PaymentDetail:
@@ -614,7 +640,7 @@ components:
     ServerError:
       description: Internal server error
     ResponseCreateCustomer:
-      description: OK
+      description: Created
       content:
         application/json:
           schema:
@@ -631,6 +657,24 @@ components:
               gender: male
               address: earth
               token: ""
+    ResponseEditCustomer:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/User"  
+          example:
+            status: success
+            data: 
+              id: 1
+              fullname: Customer
+              username: customer1
+              email: customer@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: male
+              address: earth
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
     ResponseLoginUser:
       description: OK
       content:
@@ -696,7 +740,7 @@ components:
             id: 1
             name: Category 1
     ResponseCreateCategory:
-      description: OK
+      description: Created
       content:
         application/json:
           schema:
@@ -739,6 +783,21 @@ components:
             price: 25000
             category_id: 1
     ResponseCreateProduct:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"  
+          example:
+            status: success
+            data:
+              id: 1
+              name: Product 1
+              description: Desc 1
+              quantity: 20
+              price: 25000
+              category_id: 1
+    ResponseEditProduct:
       description: OK
       content:
         application/json:
@@ -778,6 +837,19 @@ components:
             product_id: 1
             quantity: 3
     ResponseCreateCartItem:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/CartItem"  
+          example:
+            status: success
+            data:
+              id: 1
+              cart_id: 1
+              product_id: 1
+              quantity: 3
+    ResponseEditCartItem:
       description: OK
       content:
         application/json:
@@ -791,7 +863,7 @@ components:
               product_id: 1
               quantity: 3
     ResponseCreateCheckout:
-      description: OK
+      description: Created
       content:
         application/json:
           schema:
@@ -815,13 +887,17 @@ components:
               customer_id: 1
               address: earth
               courier: jne
-              checkout_id: 1
+              products:
+                - product_id: 1
+                - product_id: 2
               payment_status: 1
             - id: 2
               customer_id: 1
               address: venus
               courier: jnt
-              checkout_id: 2
+              products:
+                - product_id: 1
+                - product_id: 2
               payment_status: 0
     ResponseGetTransaction:
       description: OK
@@ -834,9 +910,26 @@ components:
             customer_id: 1
             address: earth
             courier: jne
-            checkout_id: 1
+            products:
+                - product_id: 1
+                - product_id: 2
             payment_status: 1
     ResponseCreateTransaction:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Transaction"  
+          example:
+            status: success
+            data:
+              id: 1
+              customer_id: 1
+              address: earth
+              courier: jne
+              checkout_id: 1
+              payment_status: 1
+    ResponseEditTransaction:
       description: OK
       content:
         application/json:
@@ -882,17 +975,17 @@ components:
       content:
         application/json:
           example:
-            success, category deleted successfully!
+            category successfully deleted
     ResponseDeleteProduct:
       description: OK
       content:
         application/json:
           example:
-            success, product deleted successfully!
+            product successfully deleted
     ResponseDeleteCartItem:
       description: OK
       content:
         application/json:
           example:
-            success, cart item deleted successfully!
+            cart item successfully deleted
     
