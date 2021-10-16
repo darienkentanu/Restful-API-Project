@@ -13,14 +13,18 @@ func New() *echo.Echo {
 	e.POST("/register", controllers.CreateUsersController)
 	e.POST("/login", controllers.LoginUsersController)
 
-	// Admin
 	e.GET("/users", controllers.GetAllUsersController, middlewares.IsLoggedIn, middlewares.IsAdmin)
-
-	// Current login user
 	e.PUT("/users/:id", controllers.UpdateUserController, middlewares.IsLoggedIn)
 
 	e.GET("/categories", controllers.GetCategories, middlewares.IsLoggedIn)
 	e.POST("/categories", controllers.AddCategories, middlewares.IsLoggedIn, middlewares.IsAdmin)
 	e.DELETE("/categories/:id", controllers.DeleteCategories, middlewares.IsLoggedIn, middlewares.IsAdmin)
+	
+	e.GET("/products", controllers.GetAllProductsController)
+	e.GET("/products/:id", controllers.GetProductController)
+	e.POST("/products", controllers.CreateProductsController, middlewares.IsLoggedIn, middlewares.IsAdmin)
+	e.PUT("/products/:id", controllers.UpdateProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
+	e.DELETE("/products/:id", controllers.DeleteProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
+
 	return e
 }
