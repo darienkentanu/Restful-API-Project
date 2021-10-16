@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type M map[string]interface{}
+
 func LoginUsersController(c echo.Context) error {
 	userLogin := models.UserLogin{}
 	c.Bind(&userLogin)
@@ -20,28 +22,28 @@ func LoginUsersController(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Incorrect email")
 	}
-	
+
 	check := CheckPasswordHash(userLogin.Password, user.Password)
 	if !check {
 		return echo.NewHTTPError(http.StatusBadRequest, "Incorrect password")
 	}
-	
+
 	var newToken string
 	newToken, err = middlewares.CreateToken(int(user.ID), user.Role)
 	if err != nil {
 		fmt.Println("gagal bikin token")
 		return c.String(http.StatusBadRequest, "Cannot login")
 	}
-	
+
 	user.Token = newToken
 	user, err = database.UpdateTokenUser(int(user.ID), newToken)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Cannot add token")
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
+	return c.JSON(http.StatusOK, M{
 		"status": "success",
-		"data": user,
+		"data":   user,
 	})
 }
 
@@ -51,8 +53,8 @@ func GeneratehashPassword(password string) (string, error) {
 }
 
 func CheckPasswordHash(password, hash string) bool {
-  err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-  return err == nil
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
 
 func CreateUsersController(c echo.Context) error {
@@ -80,9 +82,9 @@ func CreateUsersController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"status":	"success",
-		"data"	:	user,
+	return c.JSON(http.StatusOK, M{
+		"status": "success",
+		"data":   user,
 	})
 }
 
@@ -93,9 +95,9 @@ func GetAllUsersController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"status": 	"success",
-		"data"	:	users,
+	return c.JSON(http.StatusOK, M{
+		"status": "success",
+		"data":   users,
 	})
 }
 
@@ -103,7 +105,7 @@ func UpdateUserController(c echo.Context) error {
 	var newUser models.User
 
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
+	if err != nil || id < 1 {
 		return c.String(http.StatusBadRequest, "Invalid ID")
 	}
 
@@ -119,9 +121,9 @@ func UpdateUserController(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"status":	"success",
-		"data":		user,
+
+	return c.JSON(http.StatusOK, M{
+		"status": "success",
+		"data":   user,
 	})
 }

@@ -11,7 +11,7 @@ import (
 )
 
 var IsLoggedIn = echoMiddleware.JWTWithConfig(echoMiddleware.JWTConfig{
-    SigningKey: []byte(constants.JWT_SECRET),
+	SigningKey: []byte(constants.JWT_SECRET),
 })
 
 func CreateToken(userId int, role string) (string, error) {
@@ -22,27 +22,27 @@ func CreateToken(userId int, role string) (string, error) {
 	claims["userId"] = userId
 	claims["role"] = role
 	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() // Token expires after 1 hour
-	
+
 	tokenString, err := token.SignedString([]byte(constants.JWT_SECRET))
 	if err != nil {
-		fmt.Errorf("Something Went Wrong: %s", err.Error())
+		fmt.Printf("Something Went Wrong: %s", err.Error())
 		return "", err
 	}
 	return tokenString, nil
 }
 
 func IsAdmin(next echo.HandlerFunc) echo.HandlerFunc {
-    return func(e echo.Context) error {
-        token := e.Get("user").(*jwt.Token)
-        if token.Valid {
+	return func(e echo.Context) error {
+		token := e.Get("user").(*jwt.Token)
+		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
 			role := claims["role"].(string)
 			if role != "admin" {
-            	return echo.ErrUnauthorized
+				return echo.ErrUnauthorized
 			}
 		}
-        return next(e)
-    }
+		return next(e)
+	}
 }
 
 func CurrentLoginUser(c echo.Context) int {
