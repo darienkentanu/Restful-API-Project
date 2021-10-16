@@ -29,7 +29,7 @@ func AddCategories(c echo.Context) error {
 	var category models.Category
 	c.Bind(&category)
 
-	_, err := database.InsertCategories(category)
+	category, err := database.InsertCategories(category)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
