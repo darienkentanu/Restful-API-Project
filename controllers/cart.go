@@ -4,23 +4,15 @@ import (
 	"altastore/lib/database"
 	"altastore/middlewares"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
 func GetAllCartItem (c echo.Context) error {
-	// User ID
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
-	}
 
-	if id != middlewares.CurrentLoginUser(c) {
-		return echo.NewHTTPError(http.StatusForbidden, "Forbidden")
-	}
+	userID := middlewares.CurrentLoginUser(c)
 	
-	cartID := CartIdInCart(id)
+	cartID := CartIdInCart(userID)
 	cartItems, err := database.GetAllCartItem(cartID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")

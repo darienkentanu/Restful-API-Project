@@ -13,15 +13,7 @@ import (
 func AddCartItemController(c echo.Context) error {
 	var addItem models.AddCartItem
 
-	// User ID
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
-	}
-
-	if id != middlewares.CurrentLoginUser(c) {
-		return echo.NewHTTPError(http.StatusForbidden, "Forbidden")
-	}
+	userID := middlewares.CurrentLoginUser(c)
 
 	if err := c.Bind(&addItem); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
@@ -36,9 +28,10 @@ func AddCartItemController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid product id")
 	}
 
-	cartID := CartIdInCart(id)
+	cartID := CartIdInCart(userID)
 
 	var cartItem models.CartItem
+	var err error
 	row = database.GetProductInCartItem(cartID, addItem.ProductID)
 	if row == 0 {
 		cartItem, err = database.CreateCartItem(cartID, addItem)
