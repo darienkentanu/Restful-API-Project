@@ -40,6 +40,12 @@ func GetTransactionStatus(c echo.Context) error {
 			"status transaksi": "belum dibayar",
 		})
 	}
+	if status == 1 {
+		err := database.UpdateTransactionStatus(transactionID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "an error has been occured")
+		}
+	}
 	return c.JSON(http.StatusOK, M{
 		"status transaksi": "sudah dibayar",
 	})
