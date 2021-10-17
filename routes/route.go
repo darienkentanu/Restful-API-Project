@@ -26,5 +26,10 @@ func New() *echo.Echo {
 	e.PUT("/products/:id", controllers.UpdateProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
 	e.DELETE("/products/:id", controllers.DeleteProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
 
+	e.POST("/carts/:id", controllers.AddCartItemController, middlewares.IsLoggedIn)
+	e.GET("/carts/:id", controllers.GetAllCartItem, middlewares.IsLoggedIn)
+	e.PUT("/cartitems/:id", controllers.UpdateCartItemController, middlewares.IsLoggedIn)
+	e.DELETE("/cartitems/:id", controllers.DeleteCartItemController, middlewares.IsLoggedIn)
+
 	return e
 }

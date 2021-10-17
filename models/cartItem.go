@@ -7,9 +7,18 @@ type CartItem struct {
 	CartID     int     `json:"cart_id" form:"cart_id"`
 	Cart       Cart    `gorm:"foreignkey:CartID" json:"-"`
 	ProductID  int     `json:"product_id" form:"product_id"`
-	Product    Product `gorm:"foreignkey:ProductID"`
+	Product    Product `gorm:"foreignkey:ProductID" json:"-"`
 	Quantity   int     `gorm:"type:int;not null" json:"quantity" form:"quantity"`
-	AddedAt    time.Time
-	CheckoutID int      `json:"checkout_id" form:"checkout_id"`
-	Checkout   Checkout `gorm:"foreignkey:CheckoutID" json:"-"`
+	CreatedAt  time.Time
+	CheckoutID int      `json:"-"`
+	Checkout   Checkout `gorm:"foreignkey:CheckoutID;null" json:"-"`
+}
+
+type AddCartItem struct {
+	ProductID  int     `json:"product_id" form:"product_id"`
+	Quantity   int     `json:"quantity" form:"quantity"`
+}
+
+type UpdateCartItem struct {
+	Quantity   int     `json:"quantity" form:"quantity"`
 }
