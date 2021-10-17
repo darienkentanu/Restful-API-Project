@@ -26,5 +26,7 @@ func New() *echo.Echo {
 	e.PUT("/products/:id", controllers.UpdateProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
 	e.DELETE("/products/:id", controllers.DeleteProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
 
+	e.POST("/payments/:id", controllers.RequestBilling, middlewares.IsLoggedIn)
+	e.GET("/payments/:id", controllers.GetTransactionStatus, middlewares.IsLoggedIn)
 	return e
 }
