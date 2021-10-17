@@ -21,3 +21,12 @@ func GetUserIdInCart(cartID int) (models.Cart, error) {
 
 	return cart, nil
 }
+
+func GetCartIdInCart(userID int) (models.Cart, error) {
+	var cart models.Cart
+	if err := config.InitDB().Find(&cart, "user_id = ?", userID).Error; err != nil {
+		return cart, err
+	}
+
+	return cart, nil
+}
