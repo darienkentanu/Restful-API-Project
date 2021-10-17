@@ -9,7 +9,7 @@ import (
 
 func New() *echo.Echo {
 	e := echo.New()
-
+	middlewares.LogMiddlewares(e)
 	e.POST("/register", controllers.CreateUsersController)
 	e.POST("/login", controllers.LoginUsersController)
 
@@ -19,7 +19,7 @@ func New() *echo.Echo {
 	e.GET("/categories", controllers.GetCategories, middlewares.IsLoggedIn)
 	e.POST("/categories", controllers.AddCategories, middlewares.IsLoggedIn, middlewares.IsAdmin)
 	e.DELETE("/categories/:id", controllers.DeleteCategories, middlewares.IsLoggedIn, middlewares.IsAdmin)
-	
+
 	e.GET("/products", controllers.GetAllProductsController)
 	e.GET("/products/:id", controllers.GetProductController)
 	e.POST("/products", controllers.CreateProductsController, middlewares.IsLoggedIn, middlewares.IsAdmin)
