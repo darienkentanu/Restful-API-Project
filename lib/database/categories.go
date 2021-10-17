@@ -14,9 +14,9 @@ func GetCategories() ([]models.Category, error) {
 	return categories, nil
 }
 
-func InsertCategories(categories models.Category) (interface{}, error) {
+func InsertCategories(categories models.Category) (models.Category, error) {
 	if err := config.InitDB().Save(&categories).Error; err != nil {
-		return nil, err
+		return categories, err
 	}
 	return categories, nil
 }
@@ -30,4 +30,14 @@ func DeleteCategoriesById(id int) error {
 	}
 	return nil
 
+}
+
+func GetCategoryId(id int) error {
+	var category models.Category
+	err := config.InitDB().Where("id = ?", id).First(&category).Error
+	if err != nil {
+		return err
+	}
+	
+	return nil
 }
