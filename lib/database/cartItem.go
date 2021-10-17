@@ -41,10 +41,10 @@ func UpdateStockCartItem(cartID int, addItem models.AddCartItem) (models.CartIte
 	return cartItem, nil
 }
 
-func GetAllCartItem(cartItemId int) ([]models.CartItem, error) {
+func GetAllCartItem(cartId int) ([]models.CartItem, error) {
 	var cartItem []models.CartItem
 
-	if err := config.InitDB().Find(&cartItem, "cart_id = ? and checkout_id IS NULL", cartItemId).Error; err != nil {
+	if err := config.InitDB().Find(&cartItem, "cart_id = ? and checkout_id IS NULL", cartId).Error; err != nil {
 		return nil, err
 	}
 

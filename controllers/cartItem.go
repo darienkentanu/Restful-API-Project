@@ -13,14 +13,13 @@ import (
 func AddCartItemController(c echo.Context) error {
 	var addItem models.AddCartItem
 
-	// Cart ID
+	// User ID
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil || id < 1{
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
-	userID := GetUserIdController(id)
-	if userID != middlewares.CurrentLoginUser(c) {
+	if id != middlewares.CurrentLoginUser(c) {
 		return echo.NewHTTPError(http.StatusForbidden, "Forbidden")
 	}
 
@@ -37,15 +36,17 @@ func AddCartItemController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid product id")
 	}
 
+	cartID := CartIdInCart(id)
+
 	var cartItem models.CartItem
-	row = database.GetProductInCartItem(id, addItem.ProductID)
+	row = database.GetProductInCartItem(cartID, addItem.ProductID)
 	if row == 0 {
-		cartItem, err = database.CreateCartItem(id, addItem)
+		cartItem, err = database.CreateCartItem(cartID, addItem)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
 		}
 	} else {
-		cartItem, err = database.UpdateStockCartItem(id, addItem)
+		cartItem, err = database.UpdateStockCartItem(cartID, addItem)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
 		}
@@ -66,8 +67,8 @@ func UpdateCartItemController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
-	cartID := GetCartIdController(id)
-	userID := GetUserIdController(cartID)
+	cartID := CartIdInCartItem(id)
+	userID := UserIdInCart(cartID)
 	if userID != middlewares.CurrentLoginUser(c) {
 		return echo.NewHTTPError(http.StatusForbidden, "Forbidden")
 	}
@@ -110,8 +111,8 @@ func DeleteCartItemController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
-	cartID := GetCartIdController(id)
-	userID := GetUserIdController(cartID)
+	cartID := CartIdInCartItem(id)
+	userID := UserIdInCart(cartID)
 	if userID != middlewares.CurrentLoginUser(c) {
 		return echo.NewHTTPError(http.StatusForbidden, "Forbidden")
 	}
@@ -126,7 +127,7 @@ func DeleteCartItemController(c echo.Context) error {
 	})
 }
 
-func GetCartIdController(cartItemID int) int {
+func CartIdInCartItem(cartItemID int) int {
 	cartItem, err := database.GetCartIdInCartItem(cartItemID)
 	if err != nil {
 		return -1
