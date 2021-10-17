@@ -62,3 +62,9 @@ func DeleteProduct(id int) error {
 
 	return nil
 }
+
+func GetProductID(id int) int {
+	var product models.Product
+	row := config.InitDB().Where("id = ?", id).Find(&product).RowsAffected
+	return int(row)
+}
