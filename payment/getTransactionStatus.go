@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func getTransactionStatus(orderID int) (status int, err error) {
+func GetTransactionStatus(orderID int) (status int, err error) {
 
 	orderIDString := strconv.Itoa(orderID)
 	url := "https://api.sandbox.midtrans.com/v2/" + orderIDString + "/status"

@@ -12,7 +12,7 @@ import (
 
 type M map[string]interface{}
 
-func requestPayment(orderID int, amount int) (redirectURL string, err error) {
+func RequestBilling(orderID int, amount int) (redirectURL string, err error) {
 
 	url := "https://app.sandbox.midtrans.com/snap/v1/transactions"
 	method := "POST"
