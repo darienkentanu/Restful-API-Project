@@ -9,7 +9,7 @@ import (
 
 func New() *echo.Echo {
 	e := echo.New()
-	middlewares.LogMiddlewares(e)
+
 	e.POST("/register", controllers.CreateUsersController)
 	e.POST("/login", controllers.LoginUsersController)
 
