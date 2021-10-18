@@ -3,13 +3,26 @@ package database
 import (
 	"altastore/config"
 	"altastore/models"
+	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 func GetUserByEmail(userLogin models.UserLogin) (models.User, error) {
 	user := models.User{}
 	err := config.InitDB().Where("email = ?", userLogin.Email).First(&user).Error
-	
-	return user, err
+	if err != nil {
+		return models.User{}, echo.NewHTTPError(http.StatusInternalServerError)
+	}
+	return user, nil
+}
+
+func GetUserByID(userID int) (models.User, error) {
+	user := models.User{}
+	if err := config.InitDB().Where("id = ?", userID).First(&user).Error; err != nil {
+		return models.User{}, echo.NewHTTPError(http.StatusInternalServerError)
+	}
+	return user, nil
 }
 
 func UpdateUser(id int, newUser models.User) (models.User, error) {
@@ -19,13 +32,13 @@ func UpdateUser(id int, newUser models.User) (models.User, error) {
 		return user, err
 	}
 
-	user.Fullname 		= newUser.Fullname
-	user.Username 		= newUser.Username
-	user.Email 			= newUser.Email
-	user.Password 		= newUser.Password
-	user.PhoneNumber 	= newUser.PhoneNumber
-	user.Gender 		= newUser.Gender
-	user.Address 		= newUser.Address
+	user.Fullname = newUser.Fullname
+	user.Username = newUser.Username
+	user.Email = newUser.Email
+	user.Password = newUser.Password
+	user.PhoneNumber = newUser.PhoneNumber
+	user.Gender = newUser.Gender
+	user.Address = newUser.Address
 
 	if err := config.InitDB().Save(&user).Error; err != nil {
 		return user, err
@@ -40,7 +53,7 @@ func UpdateTokenUser(id int, newToken string) (models.User, error) {
 		return user, err
 	}
 
-	user.Token 		= newToken
+	user.Token = newToken
 
 	if err := config.InitDB().Model(&user).Update("token", newToken).Error; err != nil {
 		return user, err

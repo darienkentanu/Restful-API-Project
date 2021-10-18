@@ -8,10 +8,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func GetAllCartItem (c echo.Context) error {
+func GetAllCartItem(c echo.Context) error {
 
 	userID := middlewares.CurrentLoginUser(c)
-	
+
 	cartID := CartIdInCart(userID)
 	cartItems, err := database.GetAllCartItem(cartID)
 	if err != nil {

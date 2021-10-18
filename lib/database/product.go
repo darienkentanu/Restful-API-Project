@@ -40,11 +40,11 @@ func UpdateProduct(id int, newProduct models.Product) (models.Product, error) {
 		return product, err
 	}
 
-	product.Name 		= newProduct.Name
-	product.CategoryID 	= newProduct.CategoryID
+	product.Name = newProduct.Name
+	product.CategoryID = newProduct.CategoryID
 	product.Description = newProduct.Description
-	product.Quantity 	= newProduct.Quantity
-	product.Price 		= newProduct.Price
+	product.Quantity = newProduct.Quantity
+	product.Price = newProduct.Price
 
 	if err := config.InitDB().Save(&product).Error; err != nil {
 		return product, err

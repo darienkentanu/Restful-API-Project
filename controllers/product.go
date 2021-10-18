@@ -47,7 +47,7 @@ func GetAllProductsController(c echo.Context) error {
 
 func GetProductController(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
+	if err != nil || id < 1 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
@@ -66,7 +66,7 @@ func UpdateProductController(c echo.Context) error {
 	var newProduct models.Product
 
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
+	if err != nil || id < 1 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
@@ -87,7 +87,7 @@ func UpdateProductController(c echo.Context) error {
 
 func DeleteProductController(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
+	if err != nil || id < 1 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 

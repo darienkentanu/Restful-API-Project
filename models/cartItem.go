@@ -15,10 +15,17 @@ type CartItem struct {
 }
 
 type AddCartItem struct {
-	ProductID  int     `json:"product_id" form:"product_id"`
-	Quantity   int     `json:"quantity" form:"quantity"`
+	ProductID int `json:"product_id" form:"product_id"`
+	Quantity  int `json:"quantity" form:"quantity"`
 }
 
 type UpdateCartItem struct {
-	Quantity   int     `json:"quantity" form:"quantity"`
+	Quantity int `json:"quantity" form:"quantity"`
+}
+
+type CartItem_Response struct {
+	ProductID    int    `json:"product_id"`
+	ProductName  string `json:"product_name"`
+	ProductPrice int    `json:"product_price"`
+	Quantity     int    `json:"quantity"`
 }

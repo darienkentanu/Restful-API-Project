@@ -85,3 +85,12 @@ func GetCartIdInCartItem(cartItemID int) (models.CartItem, error) {
 
 	return cartItem, nil
 }
+
+func GetProductQuantityInCartItem(cartID, productID int) (models.CartItem, error) {
+	var cartItem models.CartItem
+	if err := config.InitDB().Where("cart_id = ? and product_id = ? and checkout_id IS NULL", cartID, productID).First(&cartItem).Error; err != nil {
+		return cartItem, err
+	}
+
+	return cartItem, nil
+}

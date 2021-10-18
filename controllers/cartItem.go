@@ -56,7 +56,7 @@ func UpdateCartItemController(c echo.Context) error {
 
 	// Cart item ID
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
+	if err != nil || id < 1 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
@@ -73,7 +73,7 @@ func UpdateCartItemController(c echo.Context) error {
 	if updateItem.Quantity < 0 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid quantity")
 	}
-	
+
 	var cartItem models.CartItem
 	if updateItem.Quantity == 0 {
 		err = database.DeleteCartItem(id)
@@ -100,7 +100,7 @@ func UpdateCartItemController(c echo.Context) error {
 func DeleteCartItemController(c echo.Context) error {
 	// Cart item ID
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1{
+	if err != nil || id < 1 {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
