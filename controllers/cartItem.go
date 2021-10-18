@@ -39,7 +39,7 @@ func AddCartItemController(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
 		}
 	} else {
-		cartItem, err = database.UpdateStockCartItem(cartID, addItem)
+		cartItem, err = database.UpdateQuantityCartItem(cartID, addItem)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
 		}

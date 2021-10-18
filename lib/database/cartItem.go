@@ -21,14 +21,14 @@ func CreateCartItem(CartID int, addItem models.AddCartItem) (models.CartItem, er
 
 func GetProductInCartItem(cartID, productID int) int {
 	var cartItem models.CartItem
-	row := config.InitDB().Where("cart_id = ? and product_id = ?", cartID, productID).Find(&cartItem).RowsAffected
+	row := config.InitDB().Where("cart_id = ? and product_id = ? and checkout_id IS NULL", cartID, productID).Find(&cartItem).RowsAffected
 	return int(row)
 }
 
-func UpdateStockCartItem(cartID int, addItem models.AddCartItem) (models.CartItem, error) {
+func UpdateQuantityCartItem(cartID int, addItem models.AddCartItem) (models.CartItem, error) {
 	var cartItem models.CartItem
 
-	if err := config.InitDB().Where("cart_id = ? and product_id = ?", cartID, addItem.ProductID).First(&cartItem).Error; err != nil {
+	if err := config.InitDB().Where("cart_id = ? and product_id = ? and checkout_id IS NULL", cartID, addItem.ProductID).First(&cartItem).Error; err != nil {
 		return cartItem, err
 	}
 
