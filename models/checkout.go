@@ -12,3 +12,4 @@ type CheckoutItems struct {
 	CartID   int
 	CartItem []CartItem
 }
+
