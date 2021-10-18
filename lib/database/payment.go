@@ -6,13 +6,13 @@ import (
 	"errors"
 )
 
-func GetPaymentAmount(idTransaction int) (amount int, err error) {
-	var p models.PaymentDetail
-	if err := config.InitDB().Where("transaction_id = ?", idTransaction).Last(&p).Error; err != nil {
+func GetPaymentAmount(orderid int) (amount int, err error) {
+	var t models.Transaction
+	if err := config.InitDB().Where("order_id = ?", orderid).Last(&t).Error; err != nil {
 		return 0, err
 	}
-	if p.Amount == 0 {
+	if t.Amount == 0 {
 		return 0, errors.New("internal server error, -> payment amount couldn't be zero")
 	}
-	return p.Amount, nil
+	return t.Amount, nil
 }
