@@ -37,7 +37,7 @@ func New() *echo.Echo {
 	e.GET("/payments/:id", controllers.GetTransactionStatus, middlewares.IsLoggedIn)
 
 	e.GET("/transactions", controllers.GetAllTransactionsController, middlewares.IsLoggedIn)
-	e.GET("/transactions/?range=", controllers.GetTransactionsWithRangeDate, middlewares.IsLoggedIn)
+	e.GET("/transactionsreport", controllers.GetTransactionsWithRangeDate, middlewares.IsLoggedIn, middlewares.IsAdmin)	// daily, weekly, monthly
 
 
 	return e

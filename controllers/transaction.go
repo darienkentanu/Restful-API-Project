@@ -4,6 +4,7 @@ import (
 	"altastore/lib/database"
 	"altastore/middlewares"
 	"altastore/models"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -37,12 +38,14 @@ func GetAllTransactionsController(c echo.Context) error {
 func GetTransactionsWithRangeDate(c echo.Context) error {
 	rangeDate := c.QueryParam("range")
 
-	if rangeDate != "daily" || rangeDate != "weekly" || rangeDate != "monthly" {
+	if rangeDate != "daily" && rangeDate != "weekly" && rangeDate != "monthly" {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid range")
 	}
+	
 
 	transactions, err := database.GetTransationsRangeDate(rangeDate)
 	if err != nil {
+		fmt.Println(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
 	}
 
