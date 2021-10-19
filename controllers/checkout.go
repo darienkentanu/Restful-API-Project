@@ -82,7 +82,12 @@ func Checkout(c echo.Context) error {
 	}
 
 	// insert checkoutid to cartitems
-	database.UpdateCheckoutIDinCartItem(cartID, checkoutItems.ID)
+	for _, productID := range productIDSelected {
+		_, err = database.UpdateCheckoutIdInCartItem(checkoutItems.ID, cartID, productID)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
+		}
+	}
 
 	// request payment
 	redirectURL, err := payment.RequestBilling(orderId, amount)

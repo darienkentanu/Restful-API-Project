@@ -36,5 +36,9 @@ func New() *echo.Echo {
 	e.POST("/payments/:id", controllers.RequestBilling, middlewares.IsLoggedIn)
 	e.GET("/payments/:id", controllers.GetTransactionStatus, middlewares.IsLoggedIn)
 
+	e.GET("/transactions", controllers.GetAllTransactionsController, middlewares.IsLoggedIn)
+	e.GET("/transactions/?range=", controllers.GetTransactionsWithRangeDate, middlewares.IsLoggedIn)
+
+
 	return e
 }

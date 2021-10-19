@@ -59,3 +59,17 @@ func CurrentLoginUser(e echo.Context) int {
 	}
 	return -1 // invalid user
 }
+
+func CurrentRoleLoginUser(e echo.Context) string {
+	token := e.Get("user").(*jwt.Token)
+	if token != nil && token.Valid {
+		claims := token.Claims.(jwt.MapClaims)
+		role := claims["role"]
+		if role == "admin" {
+			return "admin"
+		} else {
+			return "customer"
+		}
+	}
+	return "" // invalid
+}
