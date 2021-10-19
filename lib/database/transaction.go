@@ -4,7 +4,6 @@ import (
 	"altastore/config"
 	"altastore/models"
 	"net/http"
-	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -60,24 +59,51 @@ func GetTransactionsByUserID(userID int) ([]models.Transaction, error) {
 	return transactions, nil
 }
 
-func GetTransationsRangeDate(rangeDate string) ([]models.Transaction, error) {
-	var transactions []models.Transaction
-
-	today := time.Now()
-	lastWeek := today; // today - 7 days
-	lastMonth := today; // today - 30 days
+func GetTransationsRangeDate(rangeDate string) ([]models.TransactionReport, error) {
+	var transactions []models.TransactionReport
 
 	if rangeDate == "daily" {
-		if err :=  config.InitDB().Where("created_at = ?", today).Find(&transactions).Error; err != nil {
+		rows, err := config.InitDBSQL().Query("SELECT * FROM transactions WHERE created_at >= DATE_ADD(CURDATE(), INTERVAL -1 DAY)")
+		if err != nil {
 			return nil, err
+		}
+		defer rows.Close()
+		
+		for rows.Next() {
+        	var trans models.TransactionReport
+			if err := rows.Scan(&trans.ID, &trans.OrderID, &trans.UserID,
+				&trans.Address, &trans.Courier, &trans.PaymentStatus, &trans.Amount, &trans.CreatedAt, &trans.CheckoutID); err != nil {
+				return nil, err
+			}
+			transactions = append(transactions, trans)
 		}
 	} else if rangeDate == "weekly" {
-		if err :=  config.InitDB().Where("created_at >= ?", lastWeek).Find(&transactions).Error; err != nil {
+		rows, err := config.InitDBSQL().Query("SELECT * FROM transactions WHERE created_at >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)")
+		if err != nil {
 			return nil, err
 		}
+		
+		for rows.Next() {
+        	var trans models.TransactionReport
+			if err := rows.Scan(&trans.ID, &trans.OrderID, &trans.UserID,
+				&trans.Address, &trans.Courier, &trans.PaymentStatus, &trans.Amount, &trans.CreatedAt, &trans.CheckoutID); err != nil {
+				return nil, err
+			}
+			transactions = append(transactions, trans)
+		}
 	} else if rangeDate == "monthly" {
-		if err :=  config.InitDB().Where("created_at >= ?", lastMonth).Find(&transactions).Error; err != nil {
+		rows, err := config.InitDBSQL().Query("SELECT * FROM transactions WHERE created_at >= DATE_ADD(CURDATE(), INTERVAL -30 DAY)")
+		if err != nil {
 			return nil, err
+		}
+		
+		for rows.Next() {
+        	var trans models.TransactionReport
+			if err := rows.Scan(&trans.ID, &trans.OrderID, &trans.UserID,
+				&trans.Address, &trans.Courier, &trans.PaymentStatus, &trans.Amount, &trans.CreatedAt, &trans.CheckoutID); err != nil {
+				return nil, err
+			}
+			transactions = append(transactions, trans)
 		}
 	}
 

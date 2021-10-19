@@ -1,8 +1,10 @@
 package config
 
 import (
-	"fmt"
 	"altastore/models"
+	"database/sql"
+	"fmt"
+	"time"
 
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -32,6 +34,19 @@ func InitDB() *gorm.DB {
 	}
 
 	initMigration(db)
+	return db
+}
+
+func InitDBSQL() *sql.DB {
+	conf := GetConfig()
+	connStr := fmt.Sprintf("%s:%s@/%s", conf["DB_Username"], conf["DB_Password"], conf["DB_Name"])
+	db, err := sql.Open("mysql", connStr)
+	if err != nil {
+		panic(err)
+	}
+	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
 	return db
 }
 
