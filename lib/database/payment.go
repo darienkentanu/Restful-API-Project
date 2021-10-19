@@ -16,3 +16,27 @@ func GetPaymentAmount(orderid int) (amount int, err error) {
 	}
 	return t.Amount, nil
 }
+
+func GetRowPaymentDetail(transactionID int) int {
+	var paymentDetail models.PaymentDetail
+	row := config.InitDB().Where("transaction_id = ?", transactionID).Find(&paymentDetail).RowsAffected
+	return int(row)
+}
+
+func CreatePaymentDetail(paymentDetail models.PaymentDetail) (models.PaymentDetail, error) {
+	if err := config.InitDB().Save(&paymentDetail).Error; err != nil {
+		return paymentDetail, err
+	}
+
+	return paymentDetail, nil
+}
+
+func GetPaymentDetailByTransactionID(transactionID int) (models.PaymentDetail, error) {
+	var paymentDetail models.PaymentDetail
+
+	if err := config.InitDB().Where("transaction_id = ?", transactionID).Find(&paymentDetail).Error; err != nil {
+		return paymentDetail, err
+	}
+
+	return paymentDetail, nil
+}

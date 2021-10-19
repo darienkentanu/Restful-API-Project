@@ -103,7 +103,7 @@ func Checkout(c echo.Context) error {
 		"data":            checkoutItems,
 		"orderid":         orderId,
 		"total amount":    amount,
-		"status":          "success",
+		"status":          "200",
 		"link pembayaran": redirectURL,
 	})
 }
