@@ -21,7 +21,7 @@ func Checkout(c echo.Context) error {
 	// checkoutItems.CartID = cartID
 	cartItems, err := database.GetAllCartItem(cartID)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
+		return echo.NewHTTPError(http.StatusBadRequest, "product already checkout please checkout first or add new products to cart")
 	}
 
 	// hasil dari list product yang dipilih berdasarkan idnya
