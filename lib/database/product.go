@@ -68,3 +68,18 @@ func GetProductID(id int) int {
 	row := config.InitDB().Where("id = ?", id).Find(&product).RowsAffected
 	return int(row)
 }
+
+func UpdateProductQuantity(id, quantity int) (models.Product, error) {
+	var product models.Product
+	if err := config.InitDB().First(&product, id).Error; err != nil {
+		return product, err
+	}
+
+	newQuantity := quantity
+
+	if err := config.InitDB().Model(&product).Update("quantity", newQuantity).Error; err != nil {
+		return product, err
+	}
+
+	return product, nil
+}

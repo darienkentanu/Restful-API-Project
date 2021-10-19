@@ -33,7 +33,7 @@ func New() *echo.Echo {
 
 	e.POST("/checkout", controllers.Checkout, middlewares.IsLoggedIn)
 
-	e.POST("/payments/:id", controllers.RequestBilling, middlewares.IsLoggedIn)
+	// e.POST("/payments/:id", controllers.RequestBilling, middlewares.IsLoggedIn)
 	e.GET("/payments/:id", controllers.GetTransactionStatus, middlewares.IsLoggedIn)
 
 	e.GET("/transactions", controllers.GetAllTransactionsController, middlewares.IsLoggedIn)

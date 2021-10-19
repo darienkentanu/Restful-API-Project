@@ -109,3 +109,23 @@ func GetTransationsRangeDate(rangeDate string) ([]models.TransactionReport, erro
 
 	return transactions, nil
 }
+
+func GetTransactionByOrderID(orderID int) (models.Transaction, error) {
+	var transaction models.Transaction
+
+	if err := config.InitDB().Find(&transaction, "order_id = ?", orderID).Error; err != nil {
+		return transaction, err
+	}
+
+	return transaction, nil
+}
+
+func GetCartItemByCheckoutID(checkoutID int) ([]models.CartItem, error) {
+	var cartItems []models.CartItem
+
+	if err := config.InitDB().Find(&cartItems, "checkout_id = ?", checkoutID).Error; err != nil {
+		return nil, err
+	}
+
+	return cartItems, nil
+}
