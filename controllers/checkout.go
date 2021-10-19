@@ -18,22 +18,20 @@ func Checkout(c echo.Context) error {
 
 	userID := middlewares.CurrentLoginUser(c)
 	cartID := CartIdInCart(userID)
-	// checkoutItems.CartID = cartID
-	cartItems, err := database.GetAllCartItem(cartID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
-	}
 
-	// hasil dari list product yang dipilih berdasarkan idnya
+	// id product yang ingin di checkout dan terdapat pada cart
 	cartItemsSelected := inputJsonCheckout.ProductID
 	var productIDSelected []int //  berupa product id yg dipilih
-	for _, k := range cartItems {
-		itemInCartItem := k
-		for _, v := range cartItemsSelected {
-			if itemInCartItem.ProductID == v {
-				productIDSelected = append(productIDSelected, v)
-			}
+	for _, k := range cartItemsSelected {
+		row := database.GetProductInCartItem(cartID, k)
+		if row != 0 {
+			itemInCartItem := k
+			productIDSelected = append(productIDSelected, itemInCartItem)
 		}
+	}
+
+	if len(productIDSelected) == 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, "Product is not exist in cart")
 	}
 
 	// ambil harga product dari product && nama product by id
@@ -63,6 +61,7 @@ func Checkout(c echo.Context) error {
 	orderId := gubrak.RandomInt(10000, 99999)
 
 	// buat checkoutID
+	var err error
 	checkoutItems.ID, err = database.AddCheckoutID()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError)
