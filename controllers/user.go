@@ -6,7 +6,6 @@ import (
 	"altastore/models"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -104,19 +103,13 @@ func GetAllUsersController(c echo.Context) error {
 func UpdateUserController(c echo.Context) error {
 	var newUser models.User
 
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil || id < 1 {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid ID")
-	}
-
-	if id != middlewares.CurrentLoginUser(c) {
-		return echo.NewHTTPError(http.StatusForbidden, "Forbidden")
-	}
+	id := middlewares.CurrentLoginUser(c)
 
 	if err := c.Bind(&newUser); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 
+	var err error
 	newUser.Password, err = GeneratehashPassword(newUser.Password)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "error in password hash")

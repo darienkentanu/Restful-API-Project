@@ -14,7 +14,7 @@ func New() *echo.Echo {
 	e.POST("/login", controllers.LoginUsersController)
 
 	e.GET("/users", controllers.GetAllUsersController, middlewares.IsLoggedIn, middlewares.IsAdmin)
-	e.PUT("/users/:id", controllers.UpdateUserController, middlewares.IsLoggedIn)
+	e.PUT("/users", controllers.UpdateUserController, middlewares.IsLoggedIn)
 
 	e.GET("/categories", controllers.GetCategories, middlewares.IsLoggedIn)
 	e.POST("/categories", controllers.AddCategories, middlewares.IsLoggedIn, middlewares.IsAdmin)
@@ -26,8 +26,8 @@ func New() *echo.Echo {
 	e.PUT("/products/:id", controllers.UpdateProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
 	e.DELETE("/products/:id", controllers.DeleteProductController, middlewares.IsLoggedIn, middlewares.IsAdmin)
 
-	e.POST("/carts", controllers.AddCartItemController, middlewares.IsLoggedIn)					// by user id
-	e.GET("/carts", controllers.GetAllCartItem, middlewares.IsLoggedIn)							// by user id
+	e.POST("/carts", controllers.AddCartItemController, middlewares.IsLoggedIn)
+	e.GET("/carts", controllers.GetAllCartItem, middlewares.IsLoggedIn)
 	e.PUT("/cartitems/:id", controllers.UpdateCartItemController, middlewares.IsLoggedIn)		// by cart item id
 	e.DELETE("/cartitems/:id", controllers.DeleteCartItemController, middlewares.IsLoggedIn)	// by cart item id
 
@@ -37,7 +37,7 @@ func New() *echo.Echo {
 	e.GET("/payments/:id", controllers.GetTransactionStatus, middlewares.IsLoggedIn)
 
 	e.GET("/transactions", controllers.GetAllTransactionsController, middlewares.IsLoggedIn)
-	e.GET("/transactionsreport", controllers.GetTransactionsWithRangeDate, middlewares.IsLoggedIn, middlewares.IsAdmin)	// daily, weekly, monthly
+	e.GET("/transactionreport", controllers.GetTransactionsWithRangeDate, middlewares.IsLoggedIn, middlewares.IsAdmin)	// daily, weekly, monthly
 
 
 	return e
