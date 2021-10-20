@@ -99,7 +99,7 @@ func Checkout(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, M{
+	return c.JSON(http.StatusCreated, M{
 		"data":            checkoutItems,
 		"orderid":         orderId,
 		"total amount":    amount,

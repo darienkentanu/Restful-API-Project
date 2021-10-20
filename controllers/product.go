@@ -26,7 +26,7 @@ func CreateProductsController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Internal server error")
 	}
 
-	return c.JSON(http.StatusOK, M{
+	return c.JSON(http.StatusCreated, M{
 		"status": "success",
 		"data":   product,
 	})
