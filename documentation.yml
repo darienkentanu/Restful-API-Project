@@ -1,0 +1,958 @@
+openapi: 3.0.2
+info:
+  title: ALTA Store
+  version: 1.0.0
+servers:
+  - url: https://localhost:8000
+paths:
+  /register:
+    post:
+      tags:
+        - Users
+      summary: Customer registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                phone_number:
+                  type: string
+                gender:
+                  type: string
+                  enum: [male, female]
+                address:
+                  type: string
+      responses:
+        '201':
+          $ref: "#/components/responses/ResponseCreateCustomer"  
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/ServerError"   
+  /login:
+    post:
+      tags:
+        - Users
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseLoginUser"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/ServerError"   
+  
+  /users:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Get all users (admin only)
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetAllUsers"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError"   
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Edit current login user data
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseEditCustomer"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '403':
+          $ref: "#/components/responses/Forbidden"
+        '500':
+          $ref: "#/components/responses/ServerError"
+          
+  /categories:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Categories
+      summary: Get all categories
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetAllUsers"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Categories
+      summary: Add categories (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          $ref: "#/components/responses/ResponseCreateCategory"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/ServerError" 
+                  
+  /categories/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Categories
+      summary: Delete category by id (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for delete specific category
+          schema:
+            type: number
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseDeleteCategory"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/ServerError" 
+          
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetAllProducts"
+        '500':
+          $ref: "#/components/responses/ServerError"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Add products (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                quantity:
+                  type: number
+                price:
+                  type: number
+                category_id:
+                  $ref: "#/components/schemas/Category/properties/id"
+      responses:
+        '201':
+          $ref: "#/components/responses/ResponseCreateProduct"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError" 
+                  
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific product
+          schema:
+            type: number 
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseGetProduct"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/ServerError"
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Edit product by id (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific product
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                quantity:
+                  type: number
+                price:
+                  type: number
+                category_id:
+                  $ref: "#/components/schemas/Category/properties/id" 
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseEditProduct"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError" 
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Delete product by id (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific product
+          schema:
+            type: number 
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseDeleteProduct"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError" 
+                  
+  /carts:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Carts
+      summary: Add item to current login user cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  $ref: "#/components/schemas/Product/properties/id"
+                quantity:
+                  type: number
+      responses:
+        '201': 
+          $ref: "#/components/responses/ResponseCreateCartItem"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError" 
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Carts
+      summary: Get current login user cart items
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetCart"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+
+  /cartitems/{id}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Carts
+      summary: Edit cart item by cart item id (current login user)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific cart item
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  $ref: "#/components/schemas/Product/properties/id"
+                quantity:
+                  type: number
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseEditCartItem"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '403':
+          $ref: "#/components/responses/Forbidden"
+        '500':
+          $ref: "#/components/responses/ServerError"
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Carts
+      summary: Delete cart item by cart item id (current login user)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id for get specific cart item
+          schema:
+            type: number
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseDeleteCartItem"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '403':
+          $ref: "#/components/responses/Forbidden"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  
+  /checkout:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Checkout
+      summary: Add checkout items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courier:
+                  type: string
+                product_id:
+                  type: array
+                  items:
+                    type: integer
+                
+      responses:
+        '201': 
+          $ref: "#/components/responses/ResponseCreateCheckout"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+        '502':
+          $ref: "#/components/responses/BadGateway"
+
+  /transactions:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transactions
+      summary: Get all transactions
+      description: admin can view all transactions, while customer can view only her/his transactions
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetAllTransactions"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  
+  /transactionreport?range={range}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Transactions
+      summary: Get transaction report (admin only)
+      parameters:
+        - name: range
+          in: path
+          required: true
+          description: range for get daily, weekly or monthly transactions
+          schema:
+            type: string
+            enum: [daily, weekly, monthly]
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetAllTransactions"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  
+  /payments/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Payments
+      summary: Get payment status by order id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: order id for get specific payment status
+          schema:
+            type: integer
+      responses:
+        '200': 
+          $ref: "#/components/responses/ResponseGetPaymentStatus"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  
+          
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        fullname:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        phone_number:
+          type: string
+        gender:
+          type: string
+          enum: [male, female]
+        address:
+          type: string
+        role:
+          type: string
+          enum: [admin, customer]
+        token:
+          type: string
+        cart_id:
+          $ref: "#/components/schemas/Cart/properties/id"
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type: string
+          format: date
+    Category:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type: string
+          format: date
+    Product:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: number
+        price:
+          type: number
+        category_id:
+          $ref: "#/components/schemas/Category/properties/id"
+        created_at:
+          type: string
+          format: date
+        updated_at:
+          type: string
+          format: date
+    Cart:
+      type: object
+      properties:
+        id:
+          type: number
+        user_id:
+          type: number
+        cart_item:
+          $ref: "#/components/schemas/CartItem"
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: number
+        cart_id:
+          $ref: "#/components/schemas/Cart/properties/id"
+        product_id:
+          $ref: "#/components/schemas/Product/properties/id"
+        quantity:
+          type: number
+        checkout_id:
+          type: number
+        created_at:
+          type: string
+          format: date
+    Checkout:
+      type: object
+      properties:
+        id:
+          type: number
+        product:
+          type: object
+          properties:
+            product_id:
+              type: number
+            product_name:
+              type: string
+            product_price:
+              type: number
+            quantity:
+              type: number
+        order_id:
+          type: number
+        link pembayaran:
+          type: string
+        total amount: 
+          type: number
+    
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: number
+        customer_id:
+          $ref: "#/components/schemas/User/properties/id"
+        address:
+          type: string
+        courier:
+          type: string
+        payment_status:
+          type: number
+    PaymentDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        payment_method:
+          type: string
+        amount:
+          type: number
+        transactions_id:
+          $ref: "#/components/schemas/Transaction/properties/id"
+
+  responses:
+    StatusOK:
+      description: OK 
+    BadRequest:
+      description: Bad request
+    Forbidden: 
+      description: Forbidden
+    UnauthorizedError:
+      description: Invalid or expired jwt
+    NotFound:
+      description: Status not found
+    ServerError:
+      description: Internal server error
+    BadGateway:
+      description: Status bad gateway
+    ResponseCreateCustomer:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/User"  
+          example:
+            status: success
+            data: 
+              id: 1
+              fullname: Customer
+              username: customer1
+              email: customer@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: male
+              address: earth
+              token: ""
+    ResponseEditCustomer:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/User"  
+          example:
+            status: success
+            data: 
+              id: 1
+              fullname: Customer
+              username: customer1
+              email: customer@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: male
+              address: earth
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+    ResponseLoginUser:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/User"  
+          example:
+            status: success
+            data:
+              id: 1
+              fullname: Customer
+              username: customer1
+              email: customer@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: male
+              role: customer
+              address: earth
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+    ResponseGetAllUsers:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/User"  
+          example:
+            status: success
+            data:
+            - id: 1
+              fullname: Customer
+              username: customer1
+              email: customer@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: male
+              address: earth
+              role: customer
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+            - id: 2
+              fullname: Customer 2
+              username: customer2
+              email: customer2@gmail.com
+              password: customer123
+              phone_number: 08123456789
+              gender: female
+              address: earth
+              role: customer
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+    ResponseGetAllCategories:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Category"  
+          example:
+            status: success
+            data:
+            - id: 1
+              name: Category 1
+            - id: 2
+              name: Category 2
+    ResponseGetCategory:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Category"  
+          example:
+            id: 1
+            name: Category 1
+    ResponseCreateCategory:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Category"  
+          example:
+            status: success
+            data:
+              id: 1
+              name: Category 1
+    ResponseGetAllProducts:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"  
+          example:
+            - id: 1
+              name: Product 1
+              description: Desc 1
+              quantity: 20
+              price: 25000
+              category: Book
+            - id: 2
+              name: Product 2
+              description: Desc 2
+              quantity: 25
+              price: 10000
+              category: Book
+    ResponseGetProduct:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"  
+          example:
+            id: 1
+            name: Product 1
+            description: Desc 1
+            quantity: 20
+            price: 25000
+            category_id: 1
+    ResponseCreateProduct:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"  
+          example:
+            status: success
+            data:
+              id: 1
+              name: Product 1
+              description: Desc 1
+              quantity: 20
+              price: 25000
+              category_id: 1
+    ResponseEditProduct:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"  
+          example:
+            status: success
+            data:
+              id: 1
+              name: Product 1
+              description: Desc 1
+              quantity: 20
+              price: 25000
+              category_id: 1
+    ResponseGetCart:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Cart"  
+          example:
+            status: success
+            data:
+            - cart_item_id: 1
+              product_id: 1
+              quantity: 3
+            - cart_item_id: 2
+              product_id: 2
+              quantity: 1
+    ResponseGetCartItem:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/CartItem"  
+          example:
+            id: 1
+            cart_id: 1
+            product_id: 1
+            quantity: 3
+    ResponseCreateCartItem:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/CartItem"  
+          example:
+            status: success
+            data:
+              id: 1
+              cart_id: 1
+              product_id: 1
+              quantity: 3
+    ResponseEditCartItem:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/CartItem"  
+          example:
+            status: success
+            data:
+              id: 1
+              cart_id: 1
+              product_id: 1
+              quantity: 3
+    ResponseCreateCheckout:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Checkout"  
+          example:
+            data:
+              ID: 1
+              Product:
+                product_id: 3
+                product_name: Product 3
+                product_price: 20000
+                quantity: 2
+            order_id: 28939
+            link pembayaran: https://linkbayar.com
+            status: 200
+            total amount: 40000
+            
+    ResponseGetAllTransactions:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Transaction"  
+          example:
+            status: success
+            data:
+            - id: 1
+              order_id: 27832
+              user_id: 1
+              address: earth
+              courier: jne
+              payment_status: 1
+              amount: 20000
+              created_at: 
+              checkout_id: 1
+            - id: 2
+              order_id: 39289
+              user_id: 1
+              address: earth
+              courier: jne
+              payment_status: 0
+              amount: 40000
+              created_at: 
+              checkout_id: 2
+    ResponseGetPaymentStatus:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/PaymentDetail"  
+          example:
+            data:
+              id: 1
+              payment_method: midtrans gateway
+              transaction_id: 1
+            status: sudah dibayar
+
+    ResponseDeleteCategory:
+      description: OK
+      content:
+        application/json:
+          example:
+            "message": category successfully deleted
+    ResponseDeleteProduct:
+      description: OK
+      content:
+        application/json:
+          example:
+            "message": product successfully deleted
+    ResponseDeleteCartItem:
+      description: OK
+      content:
+        application/json:
+          example:
+            "message": cart item successfully deleted
+    
