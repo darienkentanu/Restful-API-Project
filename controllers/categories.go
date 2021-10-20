@@ -33,7 +33,7 @@ func AddCategories(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, M{
+	return c.JSON(http.StatusCreated, M{
 		"status": "success",
 		"data": M{
 			"id":   category.ID,

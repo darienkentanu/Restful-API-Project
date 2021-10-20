@@ -81,7 +81,7 @@ func CreateUsersController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Cannot create cart")
 	}
 
-	return c.JSON(http.StatusOK, M{
+	return c.JSON(http.StatusCreated, M{
 		"status": "success",
 		"data":   user,
 	})
