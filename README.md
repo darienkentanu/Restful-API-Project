@@ -68,7 +68,7 @@ VALUES ('admin', 'admin','admin@gmail.com', '$2a$14$jqZPvRBaylmWVCK4Rnh6tOpKTn3B
 | GET | /payments/:id | Get transaction status | Yes | Yes
 |---|---|---|---|---|
 | GET | /transactions | Get list of all transaction | Yes | Yes
-| GET | /transactions/report | Get transactions with range date | Yes | Yes
+| GET | /transactionreport?range={range} | Get transactions with range date | Yes | Yes
 |---|---|---|---|---|
 
 <br>
