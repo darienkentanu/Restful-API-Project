@@ -46,7 +46,7 @@ VALUES ('admin', 'admin','admin@gmail.com', '$2a$14$jqZPvRBaylmWVCK4Rnh6tOpKTn3B
 | POST | /login | Login existing user| No | No
 |---|---|---|---|---|
 | GET    | /users | Get list of all user | Yes | Yes
-| PUT | /users/:id | Update user profile | Yes | Yes
+| PUT | /users | Update user profile | Yes | Yes
 |---|---|---|---|---|
 | GET   | /categories | Get products list by category | Yes | Yes
 | POST   | /categories | Add products category | Yes | Yes
