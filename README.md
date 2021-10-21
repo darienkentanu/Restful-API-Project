@@ -20,10 +20,6 @@ project-base task alterra academy
 ```
 $ git clone https://github.com/darienkentanu/Restful-API-Project.git
 ```
-- Run `main.go`
-```
-$ go run main.go
-```
 
 To run this project first you must insert the following query to mysql
 
@@ -36,6 +32,11 @@ VALUES ('admin', 'admin','admin@gmail.com', '$2a$14$jqZPvRBaylmWVCK4Rnh6tOpKTn3B
 '081234567890','male','jakarta', 'admin',curdate());
 
 * admin password = "password"
+
+- Run `main.go`
+```
+$ go run main.go
+```
 
 
 # Endpoints
