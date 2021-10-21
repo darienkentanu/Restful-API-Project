@@ -33,7 +33,7 @@ VALUES ('admin', 'admin','admin@gmail.com', '$2a$14$jqZPvRBaylmWVCK4Rnh6tOpKTn3B
 
 * admin password = "password"
 
-- Run `main.go`
+Run `main.go`
 ```
 $ go run main.go
 ```
