@@ -48,8 +48,8 @@ VALUES ('admin', 'admin','admin@gmail.com', '$2a$14$jqZPvRBaylmWVCK4Rnh6tOpKTn3B
 | GET    | /users | Get list of all user | Yes | Yes
 | PUT | /users | Update user profile | Yes | Yes
 |---|---|---|---|---|
-| GET   | /categories | Get products list by category | Yes | Yes
-| POST   | /categories | Add products category | Yes | Yes
+| GET   | /categories | Get category list | Yes | Yes
+| POST   | /categories | Add category | Yes | Yes
 | DELETE   | /categories/:id | Delete category by id | Yes | Yes
 |---|---|---|---|---|
 | GET | /products | Get list of all products | No | No
