@@ -50,7 +50,7 @@ VALUES ('admin', 'admin','admin@gmail.com', '$2a$14$jqZPvRBaylmWVCK4Rnh6tOpKTn3B
 |---|---|---|---|---|
 | GET   | /categories | Get products list by category | Yes | Yes
 | POST   | /categories | Add products category | Yes | Yes
-| DELETE   | /categories | Delete products category | Yes | Yes
+| DELETE   | /categories/:id | Delete products category by id | Yes | Yes
 |---|---|---|---|---|
 | GET | /products | Get list of all products | No | No
 | GET | /products/:id | Get product by product id | No | No
