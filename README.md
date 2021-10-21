@@ -54,7 +54,7 @@ $ go run main.go
 | GET | /payments/:id | Get transaction status | Yes | Yes
 |---|---|---|---|---|
 | GET | /transactions | Get list of all transaction | Yes | Yes
-| GET | /transactionsreport | Get transactions with range date | Yes | Yes
+| GET | /transactions/report | Get transactions with range date | Yes | Yes
 |---|---|---|---|---|
 
 <br>
